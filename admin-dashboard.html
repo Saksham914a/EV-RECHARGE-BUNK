@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <h2>Admin Dashboard</h2>
+  <h3 id="welcome">Welcome, Admin</h3>
+
+  <nav>
+    <a href="add-bunk.html">➕ Add New Recharge Bunk</a>
+    
+    <!-- Optional future link -->
+    <!-- <a href="all-bookings.html">📄 View All Bookings</a> -->
+    <button onclick="logoutAdmin()">🔒 Logout</button>
+  </nav>
+
+  <!-- Firebase SDKs -->
+  <!--  Classic Firebase SDKs (compat version) -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+
+  <!-- Your scripts -->
+  <script src="js/firebase-config.js"></script>
+  <script src="js/admin.js"></script>
+  <script>
+    firebase.auth().onAuthStateChanged(async (user) => {
+      if (user) {
+        const doc = await db.collection("Users").doc(user.uid).get();
+        const userData = doc.data();
+        if (userData && userData.role === "admin") {
+          document.getElementById("welcome").textContent = `Welcome, ${userData.name}`;
+        }
+      }
+    });
+
+    function logoutAdmin() {
+      firebase.auth().signOut().then(() => {
+        window.location.href = "index.html";
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Search Bunks</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    #map {
+      height: 500px;
+      width: 90%;
+      margin: 30px auto;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+ <h2>Search Nearby EV Recharge Bunks</h2>
+<div id="map" style="height: 500px; width: 100%; border-radius: 10px;"></div>
+
+
+  <!-- Firebase SDKs -->
+  <!--  Classic Firebase SDKs (compat version) -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+  <script src="js/firebase-config.js"></script>
+
+  <!-- Google Maps SDK -->
+  <script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDtHnuuepbgcQ4_BNszYK7cHwciVUfxkUc&callback=initMap"
+  async
+  defer
+></script>
+
+  <script>
+  let map;
+
+function initMap() {
+  navigator.geolocation.getCurrentPosition((position) => {
+    const userLocation = {
+      lat: position.coords.latitude,
+      lng: position.coords.longitude
+    };
+
+    map = new google.maps.Map(document.getElementById("map"), {
+      center: userLocation,
+      zoom: 13
+    });
+
+    // Marker for current location
+    new google.maps.Marker({
+      position: userLocation,
+      map: map,
+      title: "Your Location"
+    });
+
+    // Fetch bunk locations from Firestore
+    db.collection("bunks").get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        if (data.coordinates) {
+          new google.maps.Marker({
+            position: {
+              lat: data.coordinates.lat,
+              lng: data.coordinates.lng
+            },
+            map: map,
+            title: data.name
+          });
+        }
+      });
+    });
+  }, () => {
+    alert("Location access denied.");
+  });
+}
+</script>
+</body>
+</html>
