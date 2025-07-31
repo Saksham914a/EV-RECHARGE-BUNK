@@ -1,6 +1,6 @@
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBfgoAAD3I8wIgvl8usqF_LqP4m6tTpq0s",
+  apiKey: "YOUR_API_KEY",
   authDomain: "ev-recharge-bunk-e3050.firebaseapp.com",
   projectId: "ev-recharge-bunk-e3050",
   storageBucket: "ev-recharge-bunk-e3050.firebasestorage.app",
